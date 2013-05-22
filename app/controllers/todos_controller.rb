@@ -1,5 +1,4 @@
 class TodosController < ApplicationController
-  before_filter :load_todos #change this
 
   def index
     @todos = Todo.all
@@ -39,9 +38,4 @@ class TodosController < ApplicationController
     end
   end
 
-  private
-
-  def load_todos
-    @todos = Todo.all
-  end
 end
