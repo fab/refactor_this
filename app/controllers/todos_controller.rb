@@ -1,5 +1,5 @@
 class TodosController < ApplicationController
-  before_filter :load_todos
+  before_filter :load_todos #change this
 
   def index
     @todos = Todo.all
@@ -10,41 +10,31 @@ class TodosController < ApplicationController
   end
 
   def show
-    @todo = Todo.find params[:id]
+    @todo = Todo.find(params[:id])
   end
 
   def create
-    list_name = params[:todo].delete(:list_name).parameterize
-    @todo = Todo.new params[:todo]
+    params[:todo][:list_name] = params[:todo][:list_name].parameterize
+    @todo = Todo.new(params[:todo])
     if @todo.save
-      @todo.update_attributes :list_name => list_name
-      @todos = Todo.where :list_name => list_name
-      @todos.each do |todo|
-        todo.update_attributes :todo_count => @todos.count
-        todo.save
-      end
       redirect_to root_url
     else
+      flash[:notice] = "Something went wrong! Try again."
       render :new
     end
   end
 
   def edit
-    @todo = Todo.find params[:id]
+    @todo = Todo.find(params[:id])
   end
 
   def update
-    @todo = Todo.find params[:id]
-    list_name = params[:todo].delete(:list_name).parameterize
-    if @todo.update_attributes params[:todo]
-      @todo.update_attributes :list_name => list_name
-      @todos = Todo.where :list_name => list_name
-      @todos.each do |todo|
-        todo.update_attributes :todo_count => @todos.count
-        todo.save
-      end
+    @todo = Todo.find(params[:id])
+    params[:todo][:list_name] = params[:todo][:list_name].parameterize
+    if @todo.update_attributes(params[:todo])
       redirect_to @todo
     else
+      flash[:notice] = "Something went wrong! Try again."
       render :edit
     end
   end
