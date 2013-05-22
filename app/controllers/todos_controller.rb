@@ -14,9 +14,7 @@ class TodosController < ApplicationController
   end
 
   def create
-    list_name = params[:todo].delete(:list_name)
-    list_name = list_name.downcase
-    list_name = list_name.gsub ' ', '-'
+    list_name = params[:todo].delete(:list_name).parameterize
     @todo = Todo.new params[:todo]
     if @todo.save
       @todo.update_attributes :list_name => list_name
@@ -37,9 +35,7 @@ class TodosController < ApplicationController
 
   def update
     @todo = Todo.find params[:id]
-    list_name = params[:todo].delete(:list_name)
-    list_name = list_name.downcase
-    list_name = list_name.gsub ' ', '-'
+    list_name = params[:todo].delete(:list_name).parameterize
     if @todo.update_attributes params[:todo]
       @todo.update_attributes :list_name => list_name
       @todos = Todo.where :list_name => list_name
